@@ -1,4 +1,21 @@
 <!DOCTYPE html>
+
+<?php
+$members = [
+    ["name" => "Krizzy Shane T. Gozo", "role" => "Group Leader", "gender" => "female", "img" => "img/krizzy3.jpg"],
+    ["name" => "Andrey Kurt L. La Torre", "role" => "Member", "gender" => "male", "img" => "img/andrey.jpg.jpeg"],
+    ["name" => "Shaina D. Tinoy", "role" => "Member", "gender" => "female", "img" => "img/shaina.jpeg"],
+    ["name" => "Edmark A. Lupiga", "role" => "Member", "gender" => "male", "img" => "img/edmark.jpeg"],
+];
+
+$filter = $_GET['gender'] ?? 'all';
+
+$filteredMembers = array_filter($members, function($member) use ($filter) {
+    if ($filter == 'all') return true;
+    return $member['gender'] == $filter;
+});
+?>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -37,9 +54,13 @@
         .member-card:hover {
             transform: scale(1.02);
         }
+
+
+
     </style>
 </head>
-<body> 
+<body class="<?= $theme ?>">
+
 <!-- Navbar -->
 <nav class="navbar fixed top-0 w-full z-50 bg-gradient-to-b from-black/80 to-transparent">
     <div class="container mx-auto px-6 py-4 flex justify-between items-center">
@@ -70,50 +91,29 @@
 <!-- Members Section -->
 <section id="members" class="pb-10 mb-3 items-center ">
     <div class="container mx-auto px-6">
-        <h2 class="text-3xl font-bold mb-8 pl-4 border-l-4 border-red-600">GROUP MEMBERS</h2>
+        <h2 class="text-3xl font-bold mb-8 pl-4 border-l-4 border-red-600 text-red-600">GROUP MEMBERS</h2>
 
-        <!-- Always visible members -->
+        <!-- Filter Buttons -->
+        <div class="flex space-x-4 mb-6">
+            <a href="?gender=all" class="px-4 py-2 bg-red-600 text-white">All</a>
+            <a href="?gender=male" class="px-4 py-2 bg-red-600 text-white ">Male</a>
+            <a href="?gender=female" class="px-4 py-2 bg-red-600 text-white ">Female</a>
+        </div>
+
+        <!-- Filtered Members -->
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            <a href="krizzy.html">
-            <div class="member-card bg-gray-800 rounded overflow-hidden shadow-lg">
-                <img src="img/krizzy3.jpg" alt="" class="mem1">
-                <div class="p-4">
-                    <h3 class="text-xl font-bold">Krizzy Shane T. Gozo</h3>
-                    <p class="text-gray-400">Group Leader</p>
+            <?php foreach ($filteredMembers as $m): ?>
+                <div class="member-card bg-gray-800 rounded overflow-hidden shadow-lg">
+                    <img src="<?= $m['img'] ?>" alt="<?= $m['name'] ?>">
+                    <div class="p-4">
+                        <h3 class="text-xl font-bold text-white-600"><?= $m['name'] ?></h3>
+                        <p class="text-gray-400"><?= $m['role'] ?></p>
+                    </div>
                 </div>
-            </div>
-            </a>
-            <div class="member-card bg-gray-800 rounded overflow-hidden shadow-lg">
-                <a href="andrey.html">
-                <img src="img/andrey.jpg.jpeg" alt="Andrey" class="mem2">
-                <div class="p-4">
-                    <h3 class="text-xl font-bold">Andrey Kurt L. La Torre</h3>
-                    <p class="text-gray-400">Member</p>
-                </div>
-            </a>
-            </div>
-            <div class="member-card bg-gray-800 rounded overflow-hidden shadow-lg">
-                <a href="shaina.html">
-                <img src="img/shaina.jpeg" alt="Shaina" class="mem3">
-                <div class="p-4">
-                    <h3 class="text-xl font-bold">Shaina D. Tinoy</h3>
-                    <p class="text-gray-400">Member</p>
-                </div>
-                </a>
-            </div>
-            <div class="member-card bg-gray-800 rounded overflow-hidden shadow-lg">
-                <a href="edmark.html">
-                <img src="img/edmark.jpeg" alt="Edmark" class="mem4">
-                <div class="p-4">
-                    <h3 class="text-xl font-bold">Edmark A. Lupiga</h3>
-                    <p class="text-gray-400">Member</p>
-                </div>
-                </a>
-            </div>
+            <?php endforeach; ?>
         </div>
     </div>
 </section>
-</div>
 
 </body>
 </html>
