@@ -1,0 +1,165 @@
+<?php
+$conn = new mysqli("localhost", "root", "", "portfolio_db");
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+$result = $conn->query("SELECT * FROM feedbacks ORDER BY created_at DESC LIMIT 5");
+?>
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto:wght@300;400;700&display=swap');
+
+        :root {
+            --netflix-red: #e50914;
+            --netflix-dark: #141414;
+            --netflix-light: #f3f3f3;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--netflix-dark);
+            color: var(--netflix-light);
+        }
+
+        .logo-font {
+            font-family: 'Bebas Neue', cursive;
+        }
+
+        .hero {
+            background: linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, var(--netflix-dark) 100%),
+                        url(img/GRYFFINDOR1.jpg) no-repeat center center;
+            background-size: cover;
+            height: 90vh;
+        }
+
+        .member-card {
+            transition: transform 0.3s ease;
+        }
+        .member-card:hover {
+            transform: scale(1.02);
+        }
+    </style>
+</head>
+<body> 
+
+<!-- Navbar -->
+<nav class="navbar fixed top-0 w-full z-50 bg-gradient-to-b from-black/80 to-transparent">
+    <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center">
+            <span class="logo-font text-3xl text-red-600 mr-10">GRYFFINDOR</span>
+            <div class="hidden md:flex space-x-6">
+                <a href="#" class="hover:text-red-500">Home</a>
+                <a href="#members" class="hover:text-red-500">Members</a>
+            </div>
+        </div>
+      
+        <div class="hidden md:flex">
+            <a href="feedback.php" class="hover:text-red-500 px-0 py-2 rounded">
+                Feedback
+            </a>
+        </div>
+    </div>
+</nav>
+
+<div class="hero">  
+<!-- Introduction Section -->
+<section class="hero flex items-center">
+    <div class="container mx-auto px-1">
+        <h1 class="text-5xl font-bold text-red-600 logo-font" style="font-size: 180px;">Group 4 <br> Gryffindor</h1>
+        <p class="text-lg max-w-2xl text-gray-300" style="font-size: 25px;">
+            We are a group of passionate IT students who share the same drive for creativity, growth, 
+            and learning. From exploring design and programming to taking on leadership and challenges, 
+            we aim to support each other while honing our individual strengths. Just like our house name, 
+            Gryffindor, we value courage, determination, and the spirit to keep moving forward together.
+        </p>
+    </div>
+</section>
+
+<!-- Members Section -->
+<section id="members" class="pb-10 mb-3 items-center ">
+    <div class="container mx-auto px-6">
+        <h2 class="text-3xl font-bold mb-8 pl-4 border-l-4 border-red-600">GROUP MEMBERS</h2>
+
+        <!--MEMBERS -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <a href="krizzy.html">
+            <div class="member-card bg-gray-800 rounded overflow-hidden shadow-lg">
+                <img src="img/krizzy3.jpg" alt="" class="mem1">
+                <div class="p-4">
+                    <h3 class="text-xl font-bold">Krizzy Shane T. Gozo</h3>
+                    <p class="text-gray-400">Group Leader</p>
+                </div>
+            </div>
+            </a>
+            <div class="member-card bg-gray-800 rounded overflow-hidden shadow-lg">
+                <a href="andrey.html">
+                <img src="img/andrey.jpg.jpeg" alt="Andrey" class="mem2">
+                <div class="p-4">
+                    <h3 class="text-xl font-bold">Andrey Kurt L. La Torre</h3>
+                    <p class="text-gray-400">Member</p>
+                </div>
+            </a>
+            </div>
+            <div class="member-card bg-gray-800 rounded overflow-hidden shadow-lg">
+                <a href="shaina.html">
+                <img src="img/shaina.jpeg" alt="Shaina" class="mem3">
+                <div class="p-4">
+                    <h3 class="text-xl font-bold">Shaina D. Tinoy</h3>
+                    <p class="text-gray-400">Member</p>
+                </div>
+                </a>
+            </div>
+            <div class="member-card bg-gray-800 rounded overflow-hidden shadow-lg">
+                <a href="edmark.html">
+                <img src="img/edmark.jpeg" alt="Edmark" class="mem4">
+                <div class="p-4">
+                    <h3 class="text-xl font-bold">Edmark A. Lupiga</h3>
+                    <p class="text-gray-400">Member</p>
+                </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FEEDBACK -->
+<section id="feedback" class="py-16 px-6 bg-gray-900">
+  <div class="container mx-auto max-w-2xl bg-gray-800 bg-opacity-90 p-8 rounded-lg shadow-lg">
+    <h2 class="text-3xl font-bold mb-6 text-red-500 text-center">Recent Feedback</h2>
+
+    <!-- COMMENTS -->
+    <div class="space-y-4">
+  <?php if ($result && $result->num_rows > 0): ?>
+    <?php while ($row = $result->fetch_assoc()): ?>
+      <div class="bg-gray-700 p-4 rounded">
+        <p class="text-sm text-gray-300">⭐ Rating: <?= $row['rating'] ?></p>
+        <p class="font-bold">
+          <?= !empty($row['name']) ? htmlspecialchars($row['name']) : 'Anonymous' ?>
+        </p>
+        <p>"<?= htmlspecialchars($row['comment']) ?>"</p>
+      </div>
+    <?php endwhile; ?>
+  <?php else: ?>
+    <p class="text-gray-400">No feedback yet. Be the first to leave one!</p>
+  <?php endif; ?>
+</div>
+
+  </div>
+</section>
+
+
+
+</div>
+
+</body>
+</html>
