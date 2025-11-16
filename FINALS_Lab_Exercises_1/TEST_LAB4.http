@@ -1,0 +1,7 @@
+POST http://localhost/LAB_EXERCISE1/LAB4_INPUT.php
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "1234"
+}
