@@ -1,0 +1,41 @@
+Answer the following:
+
+1. What are the main differences between XMLHttpRequest and 
+Fetch API?
+Answer: XMLHttpRequest uses a callback-based approach, which can lead 
+to messy, nested code, while the Fetch API relies on Promises, 
+making asynchronous code cleaner and easier to manage. Fetch also 
+provides a more modern structure that simplifies chaining and readability.
+
+In terms of error handling, XHR requires manually checking status codes, 
+while Fetch only rejects on network errors. HTTP errors in Fetch still 
+resolve normally, so developers need to verify response.ok to confirm 
+if the request was successful.
+
+Fetch supports more modern web features such as streaming and smoother 
+integration with tools like Service Workers, while XHR lacks many of 
+these capabilities. Both can cancel requests, but XHR has built-in 
+progress events, whereas Fetch uses AbortController and does not provide 
+native progress tracking.
+
+2. Why is the Fetch API considered more modern and readable?
+Answer: The Fetch API is a modern alternative to XMLHttpRequest for 
+making HTTP requests in JavaScript. It is considered more readable 
+and intuitive because it uses Promises, which simplify asynchronous 
+code and eliminate the nested callbacks common with XHR.
+
+
+3. What is the purpose of the .then() and .catch() methods in Fetch?
+Answer: The .then() method runs a callback when a Promise is 
+successfully fulfilled, handling the retrieved data. The .catch() 
+method runs a callback when a Promise is rejected or an error occurs, 
+handling any failures in the request or previous .then() blocks.
+
+
+4. What happens when you send a POST request to the placeholder API?
+Answer: When you send a POST request to the JSONPlaceholder API, 
+it doesn’t actually save your data because it’s a fake API. Instead, 
+it simulates creating a new post by returning a response that 
+includes the data you sent along with a new post ID, usually 101, so 
+you can confirm your “post” was successfully received. It’s perfect 
+for testing without affecting a real database.
