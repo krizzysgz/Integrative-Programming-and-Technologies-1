@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>XMLHttpRequest Lab - Demo</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 24px; max-width: 760px; margin: auto; }
+    #output { margin-top: 18px; border: 1px solid #ddd; padding: 14px; border-radius: 6px; min-height: 60px; }
+    button { padding: 8px 14px; font-size: 14px; cursor: pointer; border-radius: 6px; }
+    .error { color: #b71c1c; font-weight: 600; }
+    .meta { color: #555; font-size: 13px; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <h2>Exploring <code>XMLHttpRequest</code></h2>
+  <p>Click the button to load a post from <code>jsonplaceholder.typicode.com</code>.</p>
+
+  <button id="loadData">Load Post Data</button>
+  <div id="output" aria-live="polite">Result will appear here.</div>
+
+  <script>
+    const btn = document.getElementById('loadData');
+    const output = document.getElementById('output');
+
+    btn.addEventListener('click', () => {
+      output.textContent = 'Loading...';
+
+      const xhr = new XMLHttpRequest();
+
+      // optional: set a timeout (ms)
+      xhr.timeout = 8000;
+
+      // Called whenever readyState changes
+      xhr.onreadystatechange = () => {
+        // readyState 4 means the operation is complete
+        if (xhr.readyState === 4) {
+          // clear previous content
+          output.innerHTML = '';
+
+          // Successful response (status 200)
+          if (xhr.status === 200) {
+            try {
+              const data = JSON.parse(xhr.responseText);
+              output.innerHTML = `
+                <strong>Post Title:</strong> ${escapeHtml(data.title)}<br><br>
+                <strong>Content:</strong> ${escapeHtml(data.body)}
+                <div class="meta">Status: ${xhr.status} — readyState: ${xhr.readyState}</div>
+              `;
+            } catch (err) {
+              output.innerHTML = `<div class="error">Error parsing response JSON.</div>`;
+            }
+          } else {
+            // Non-200 HTTP status
+            output.innerHTML = `<div class="error">Error: ${xhr.status} — ${xhr.statusText || 'Request failed'}</div>`;
+          }
+        }
+      };
+
+      // Network-level error (e.g., DNS failure)
+      xhr.onerror = () => {
+        output.innerHTML = `<div class="error">Network error — could not reach the server.</div>`;
+      };
+
+      // Timeout handler
+      xhr.ontimeout = () => {
+        output.innerHTML = `<div class="error">Request timed out.</div>`;
+      };
+
+      // Open and send request (third arg true = asynchronous)
+      xhr.open('GET', 'https://jsonplaceholder.typicode.com/posts/1', true);
+      xhr.send();
+    });
+
+    // small helper to avoid injecting raw HTML from response
+    function escapeHtml(s) {
+      if (!s) return '';
+      return s.replace(/[&<>"']/g, (c) => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      }[c]));
+    }
+  </script>
+</body>
+</html>
